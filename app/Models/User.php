@@ -18,9 +18,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'vaccine_center_id', 
+        'name', 
+        'email', 
+        'nid', 
+        'status', 
+        'scheduled_date'
     ];
 
     /**
@@ -44,5 +47,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Relationship with VaccineCenter
+    public function vaccineCenter()
+    {
+        return $this->belongsTo(VaccineCenter::class, 'vaccine_center_id', 'id');
     }
 }

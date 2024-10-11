@@ -15,7 +15,7 @@ class VaccineCenterSeeder extends Seeder
     public function run()
     {
         //VaccineCenter::factory()->count(50)->create();
-        VaccineCenter::create(['name' => 'Center 1', 'daily_limit' => 70]);
+        VaccineCenter::create(['name' => 'Center 1', 'daily_limit' => 100]);
         VaccineCenter::create(['name' => 'Center 2', 'daily_limit' => 20]);
         VaccineCenter::create(['name' => 'Center 3', 'daily_limit' => 45]);
         VaccineCenter::create(['name' => 'Center 4', 'daily_limit' => 30]);
