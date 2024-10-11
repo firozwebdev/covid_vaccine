@@ -36,40 +36,40 @@ cd covid-vaccine-registration
 composer install
 
 ```
-Use npm to install the required JavaScript dependencies:
+### 4.Use npm to install the required JavaScript dependencies:
 
 ```bash
 npm install
 
 ```
-Copy the .env.example file to create your own environment configuration:
+### 5.Copy the .env.example file to create your own environment configuration:
 
 ```bash
 cp .env.example .env
 
 ```
 
-Run this command to generate the Laravel application key:
+### 6.Run this command to generate the Laravel application key:
 
 ```bash
 php artisan key:generate
 
 ```
 
-To set up the database schema, run the migrations:
+### 7.To set up the database schema, run the migrations:
 
 ```bash
 php artisan migrate
 
 ```
- Populate  database with initial data (Seeder), you can run:
+### 8.Populate  database with initial data (Seeder), you can run:
 
 ```bash
 php artisan db:seed
 
 ```
 
-For local development:
+### 9.For local development:
 
 ```bash
 npm run dev
