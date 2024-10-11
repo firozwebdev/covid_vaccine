@@ -26,7 +26,7 @@ git clone https://github.com/firozwebdev/covid_vaccine.git
 #### 2. Change into the project directory:
 
 ```bash
-cd covid-vaccine-registration
+cd covid_vaccine
 
 ```
 
