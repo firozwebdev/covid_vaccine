@@ -10,21 +10,22 @@ class SearchController extends Controller
 {
     public function searchStatus($nid)
     {
-        // Check if user data is cached first for production
+        /*Start Check if user data is cached first for production */
         // $user = Cache::remember("user_nid_{$nid}", 60 * 60, function () use ($nid) {
         //     return User::where('nid', $nid)
         //         ->select('id', 'name', 'status', 'scheduled_date', 'vaccine_center_id') // Select only necessary columns
         //         ->with('vaccineCenter:id,name')  // Eager loading the vaccineCenter relationship
         //         ->first();
         // });
-
-        // development
+        /*End Check if user data is cached first for production */
+        
+        /* Start For testing purposes */
         $user = User::where('nid', $nid)
         ->select('id', 'name', 'status', 'scheduled_date', 'vaccine_center_id') // Select only necessary columns
         ->with('vaccineCenter:id,name')  // Eager loading the vaccineCenter relationship
         ->first();
+        /* End For testing purposes */
 
-        
     
         if (!$user) {
             return response()->json([
