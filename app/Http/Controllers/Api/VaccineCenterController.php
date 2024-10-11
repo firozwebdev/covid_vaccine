@@ -50,6 +50,7 @@ class VaccineCenterController extends Controller
     {
         
         $user = User::where('nid', $request->nid)->first();
+        \Log::info($request->all());
         if ($user) {
             return response()->json([
                 'message' => 'Registration successful! Check your status.',

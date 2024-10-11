@@ -16,7 +16,7 @@ class UserRequest extends FormRequest
 
     public function rules()
     {
-       
+        
         
         return [
             'vaccine_center_id' => 'required|integer|exists:vaccine_centers,id',

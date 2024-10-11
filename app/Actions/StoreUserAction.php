@@ -7,6 +7,7 @@ class StoreUserAction
 {
     public function execute(UserData $data): User
     {
+       
         $user = User::create([
             'vaccine_center_id'=> $data->vaccine_center_id,
 			'name'=> $data->name,
