@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
+            $table->index('nid');
             $table->bigIncrements('id');
             $table->foreignId('vaccine_center_id');
 			$table->string('name', 100);
@@ -21,6 +22,8 @@ return new class extends Migration
 			$table->string('status')->default('Not scheduled');
 			$table->date('scheduled_date')->nullable();	
             $table->timestamps();
+
+           
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
