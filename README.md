@@ -20,4 +20,58 @@ Follow these steps to set up the project on your local machine:
 Use the following command to clone the project repository:
 
 ```bash
-git clone https://github.com/your-username/covid-vaccine-registration.git
+git clone https://github.com/firozwebdev/covid_vaccine.git
+
+```
+Change into the project directory:
+
+```bash
+cd covid-vaccine-registration
+
+```
+
+Use Composer to install the required PHP dependencies:
+
+```bash
+composer install
+
+```
+Use npm to install the required JavaScript dependencies:
+
+```bash
+npm install
+
+```
+Copy the .env.example file to create your own environment configuration:
+
+```bash
+cp .env.example .env
+
+```
+
+Run this command to generate the Laravel application key:
+
+```bash
+php artisan key:generate
+
+```
+
+To set up the database schema, run the migrations:
+
+```bash
+php artisan migrate
+
+```
+ Populate  database with initial data (Seeder), you can run:
+
+```bash
+php artisan db:seed
+
+```
+
+For local development:
+
+```bash
+npm run dev
+
+```
