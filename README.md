@@ -23,14 +23,14 @@ Use the following command to clone the project repository:
 git clone https://github.com/firozwebdev/covid_vaccine.git
 
 ```
-Change into the project directory:
+### 2. Change into the project directory:
 
 ```bash
 cd covid-vaccine-registration
 
 ```
 
-Use Composer to install the required PHP dependencies:
+### 3. Use Composer to install the required PHP dependencies:
 
 ```bash
 composer install
