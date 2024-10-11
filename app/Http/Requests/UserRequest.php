@@ -22,7 +22,7 @@ class UserRequest extends FormRequest
             'vaccine_center_id' => 'required|integer|exists:vaccine_centers,id',
 			'name' => 'required|string|max:100',
 			'email' => 'required|email|string|max:100',
-			'nid' => 'required|string',
+			'nid' => 'required|string|size:10|unique:users,nid',
             'mobile' => 'required|string',
 			'status' => 'string|nullable',
 			'scheduled_date' => 'date|nullable',
