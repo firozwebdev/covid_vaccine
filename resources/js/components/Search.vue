@@ -8,13 +8,15 @@
       maxlength="10"
     />
     <button @click="checkStatus">Check Status</button>
+    
     <div v-if="status">
       <p>Status: {{ status }}</p>
       <p v-if="status === 'Not registered'">
-        <a href="/registration">Register Here</a>
+        <router-link :to="{ name: 'registration' }">Register Here</router-link>
       </p>
     </div>
-    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div> <!-- Display error message -->
+    
+    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
   </div>
 </template>
 
@@ -26,7 +28,7 @@ export default {
     return {
       nid: '',
       status: '',
-      errorMessage: '', // New variable for error message
+      errorMessage: '',
     };
   },
   methods: {
@@ -43,22 +45,22 @@ export default {
 
       axios.get(`/api/status/${this.nid}`)
         .then(response => {
-          this.status = response.data.status;
+          this.status = response.data.status; // Ensure this is correctly set
           this.errorMessage = ''; // Reset error message if successful
         })
         .catch(error => {
-          // Handle 404 error specifically
+          // Handle specific cases for errors
           if (error.response && error.response.status === 404) {
-            this.errorMessage = 'Not registered'; // Display message if not registered
-            this.status = ''; // Reset status
+            this.status = 'Not registered'; // Set status to not registered
+            this.errorMessage = ''; // Clear any previous error message
           } else {
             console.error("There was an error checking the status:", error);
+            this.errorMessage = 'An unexpected error occurred. Please try again.'; // General error message
           }
         });
     },
     validateNID(nid) {
-      // Check if the NID is exactly 10 digits
-      return /^\d{10}$/.test(nid);
+      return /^\d{10}$/.test(nid); // Ensure NID is exactly 10 digits
     },
   },
 };

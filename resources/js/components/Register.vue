@@ -34,14 +34,16 @@
             <button type="submit" :disabled="isCenterFull">Register</button>
         </form>
 
-        <!-- Success or Already Registered Message -->
+        <!-- Success Message -->
         <div v-if="message" :class="status === 'registered' ? 'success-message' : 'warning-message'">
-            {{ message }}
+           {{ message }}
         </div>
 
-        <!-- Link to Status if user is already registered -->
-        <div v-if="status === 'already_registered'">
-            <a :href="statusUrl">Check your vaccination status here</a>
+        <!-- Link to Check Status if registration is successful -->
+        <div v-if="status === 'registered'">
+            <router-link :to="{ name: 'status', params: { nid: form.nid } }">
+                Check your vaccination status here
+            </router-link>
         </div>
     </div>
 </template>
@@ -62,10 +64,9 @@ export default {
             vaccineCenters: [],
             message: '',
             status: '',
-            statusUrl: '',
             isCenterFull: false,
             selectedCenter: null,
-            errorMessage: '', // Add an errorMessage field to store the error message
+            errorMessage: '',
         };
     },
     created() {
@@ -103,17 +104,21 @@ export default {
                 .then(response => {
                     this.message = response.data.message;
                     this.status = response.data.status;
+
+                    // Set the status URL to navigate to after registration
+                    if (response.data.status === 'registered') {
+                        this.statusUrl = `/status/${this.form.nid}`; // Adjust according to your routes
+                    }
                 })
                 .catch(error => {
                     console.error("There was an error registering:", error);
 
                     // Check for validation errors from the server
                     if (error.response && error.response.data) {
-                        // Check if there's a message for 'nid'
                         if (error.response.data.nid && error.response.data.nid.length > 0) {
                             this.errorMessage = error.response.data.nid[0]; // Display the first error message for NID
                         } else {
-                            this.errorMessage = error.response.data.message || "An unexpected error occurred. Please try again."; // Use a specific message if available
+                            this.errorMessage = error.response.data.message || "An unexpected error occurred. Please try again.";
                         }
                     } else {
                         this.errorMessage = "An unexpected error occurred. Please try again."; // Fallback message
