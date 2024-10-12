@@ -1,11 +1,11 @@
 <?php
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\User;
-use App\Notifications\VaccinationReminder;
-use Carbon\Carbon;
 use Log;
+use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\Console\Command;
+use App\Notifications\EmailNotification;
 
 class ScheduleVaccinationReminder extends Command
 {
@@ -14,26 +14,37 @@ class ScheduleVaccinationReminder extends Command
 
     public function handle()
     {
-        Log::info('Running vaccination notification scheduler');
+        \Log::info('Running vaccination notification scheduler');
 
-        // Query users who have vaccination scheduled tomorrow
-        $users = User::whereDate('scheduled_date', '=', now()->addDay()->toDateString())->get();
+        // Process users in chunks to avoid memory overload
+        User::whereDate('scheduled_date', '=', now()->addDay()->toDateString())
+            ->where('notified', false)
+            ->chunk(100, function ($users) {
+                foreach ($users as $user) {
+                    $notificationDate = Carbon::parse($user->scheduled_date)->subDay()->setTime(21, 0);
 
-        foreach ($users as $user) {
-            // Calculate the notification time (9 PM the night before the scheduled date)
-            $notificationDate = Carbon::parse($user->scheduled_date)->subDay()->setTime(21, 0);
+                    if (now()->greaterThanOrEqualTo($notificationDate)) {
+                        $messages = [
+                            'greeting' => 'Hello ' . $user->name,
+                            'message' => [
+                                'Your vaccination is scheduled for tomorrow ' . $user->scheduled_date->format('l, F j, Y \a\t g:i A'),
+                                'Please come to your vaccination center at the scheduled time.',
+                            ],
+                        ];
+                        
+                        // Send notification
+                        $user->notify(new EmailNotification($user, $user->scheduled_date, $notificationDate, $messages));
 
-            // Check if the notification should be sent
-            if (now()->greaterThanOrEqualTo($notificationDate) && !$user->notified) {
-                $user->notify(new VaccinationReminder($user, $user->scheduled_date, $notificationDate));
+                        // Log notification sending
+                        \Log::info("Notification sent to user ID: {$user->id} for vaccination on {$user->scheduled_date}");
 
-                // Log and mark the user as notified
-                Log::info("Notification sent to user ID: {$user->id} for vaccination on {$user->scheduled_date}");
+                        // Mark user as notified
+                        $user->notified = true;
+                        $user->save();
+                    }
+                }
+            });
 
-                // Mark user as notified
-                $user->notified = true;
-                $user->save();
-            }
-        }
+        \Log::info('Vaccination notification scheduler finished.');
     }
 }
