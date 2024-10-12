@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use App\Contracts\NotificationInterface;
+use Illuminate\Support\Facades\App; // Import the App facade
 
 class VaccinationReminder extends Notification implements ShouldQueue
 {
@@ -16,40 +17,47 @@ class VaccinationReminder extends Notification implements ShouldQueue
     protected $notificationDate;
     protected $notifications;
 
-    public function __construct($user, $scheduledDate, $notificationDate, array $notifications)
+    public function __construct($user, $scheduledDate, $notificationDate)
     {
         $this->user = $user;
         $this->scheduledDate = $scheduledDate;
         $this->notificationDate = $notificationDate;
-        $this->notifications = $notifications; // Array of notification channels
+        $this->notifications = config('notification.channels'); // Get channels from config
     }
 
     public function via($notifiable)
     {
-        // Return only the necessary channels (can be dynamically determined)
-        return ['mail', 'vonage'];
+        // Return the configured channels
+        return $this->notifications;
     }
 
     public function toMail($notifiable)
     {
-        return $this->sendNotification($notifiable, 'email');
+        return $this->createMessage('email', $notifiable);
     }
 
     public function toVonage($notifiable)
     {
-        return $this->sendNotification($notifiable, 'sms');
+        return $this->createMessage('sms', $notifiable);
     }
 
-    protected function sendNotification($notifiable, $type)
+    protected function createMessage($type, $notifiable)
     {
-        $message = 'Hello ' . $this->user->name . 
-                   ', your vaccination is scheduled for ' . 
-                   $this->scheduledDate->format('l, F j, Y \a\t g:i A') . '.';
+        $messageContent = 'Hello ' . $this->user->name . 
+                          ', your vaccination is scheduled for ' . 
+                          $this->scheduledDate->format('l, F j, Y \a\t g:i A') . '.';
 
-        if (isset($this->notifications[$type])) {
-            return $this->notifications[$type]->send($notifiable, $message);
-        }
+        // Resolve the notification class from the service container
+        $notification = App::make(NotificationInterface::class, ['type' => $type]);
 
-        return null;
+        // Send the notification using the corresponding method
+        return $notification->send($notifiable, $messageContent);
+    }
+
+    public function toArray($notifiable)
+    {
+        return [
+            'scheduled_date' => $this->scheduledDate,
+        ];
     }
 }
