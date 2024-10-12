@@ -2,6 +2,7 @@
 namespace App\Listeners;
 
 use App\Events\VaccinationScheduled;
+use App\Notifications\EmailNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendVaccinationNotification implements ShouldQueue
@@ -20,7 +21,9 @@ class SendVaccinationNotification implements ShouldQueue
 
         // You can reuse your existing notification logic here
         $notificationDate = \Carbon\Carbon::parse($scheduledDate)->subDay()->setTime(21, 0);
-
-        $user->notify(new \App\Notifications\EmailNotification($user, $scheduledDate, $notificationDate));
+        $messages = [
+            'message' => 'Your vaccination is scheduled for ' . $scheduledDate->format('l, F j, Y \a\t g:i A') . '.<br> Thanks for your patience !',
+        ];
+        $user->notify(new EmailNotification($user, $scheduledDate, $notificationDate, $messages));
     }
 }

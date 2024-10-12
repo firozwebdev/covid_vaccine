@@ -17,7 +17,7 @@ class NotificationServiceProvider extends ServiceProvider
             // Expecting 'type' and any additional required parameters
             switch ($params['type']) {
                 case 'email':
-                    return new EmailNotification($params['user'], $params['scheduledDate'], $params['notificationDate']);
+                    return new EmailNotification($params['user'], $params['scheduledDate'] = null, $params['notificationDate']= null, $params['messages'] = []);
                 case 'sms':
                     //return new VonageNotification($params['user'], $params['scheduledDate'], $params['notificationDate']);
                 default:

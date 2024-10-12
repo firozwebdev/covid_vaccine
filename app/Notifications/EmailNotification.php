@@ -13,12 +13,14 @@ class EmailNotification extends Notification implements ShouldQueue
     protected $user;
     protected $scheduledDate;
     protected $notificationDate;
+    protected $messages = [];
 
-    public function __construct($user, $scheduledDate, $notificationDate)
+    public function __construct($user, $scheduledDate, $notificationDate, $messages)
     {
         $this->user = $user;
         $this->scheduledDate = $scheduledDate;
         $this->notificationDate = $notificationDate;
+        $this->messages = $messages;
     }
 
     /**
@@ -38,8 +40,8 @@ class EmailNotification extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->greeting('Hello ' . $this->user->name)
-            ->line('Your vaccination is scheduled for ' . $this->scheduledDate->format('l, F j, Y \a\t g:i A'))
-            ->line('Thanks for your patience !');
+            ->line($this->messages['message']);
+
     }
 
     /**
