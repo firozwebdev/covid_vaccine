@@ -19,7 +19,7 @@ class NotificationServiceProvider extends ServiceProvider
                 case 'email':
                     return new EmailNotification($params['user'], $params['scheduledDate'] = null, $params['notificationDate']= null, $params['messages'] = []);
                 case 'sms':
-                    //return new VonageNotification($params['user'], $params['scheduledDate'], $params['notificationDate']);
+                    return new VonageNotification($params['user'], $params['scheduledDate'], $params['notificationDate']);
                 default:
                     throw new \InvalidArgumentException("Unsupported notification type: {$params['type']}");
             }

@@ -4,7 +4,7 @@ namespace App\Providers;
 use App\Events\UserRegistered;
 use App\Events\VaccinationScheduled;
 use App\Listeners\SendVaccinationNotification;
-use App\Listeners\SendRegistrationNotifications;
+use App\Listeners\SendRegistrationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -14,7 +14,7 @@ class EventServiceProvider extends ServiceProvider
             SendVaccinationNotification::class,
         ],
         UserRegistered::class => [
-            SendRegistrationNotifications::class,
+            SendRegistrationNotification::class,
         ],
     ];
 

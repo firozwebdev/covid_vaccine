@@ -24,7 +24,8 @@ class User extends Authenticatable
         'nid',
         'mobile', 
         'status', 
-        'scheduled_date'
+        'scheduled_date',
+        'notified',
     ];
 
     /**

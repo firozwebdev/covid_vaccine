@@ -36,13 +36,29 @@ class EmailNotification extends Notification implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      */
+    // public function toMail(object $notifiable)
+    // {
+    //     return (new MailMessage)
+    //         ->greeting('Hello ' . $this->user->name)
+    //         ->line($this->messages['message']);
+
+    // }
     public function toMail(object $notifiable)
     {
-        return (new MailMessage)
-            ->greeting('Hello ' . $this->user->name)
-            ->line($this->messages['message']);
-
+        $mailMessage = (new MailMessage)
+            ->greeting($this->messages['greeting']);  // Add the greeting
+    
+        // Loop through each line in the 'message' array and add it to the email
+        foreach ($this->messages['message'] as $line) {
+            if (!empty($line)) {
+                $mailMessage->line($line);
+            }
+        }
+    
+        return $mailMessage;
     }
+    
+
 
     /**
      * Get the array representation of the notification.
@@ -52,7 +68,7 @@ class EmailNotification extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            'scheduled_date' => $this->scheduledDate,
+            'scheduled_date' => $this->scheduledDate ?? null,
         ];
     }
 }

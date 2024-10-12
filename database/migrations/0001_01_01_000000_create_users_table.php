@@ -20,7 +20,8 @@ return new class extends Migration
 			$table->string('nid')->unique();
 			$table->string('mobile');
 			$table->string('status')->default('Not scheduled');
-			$table->date('scheduled_date')->nullable();	
+			$table->date('scheduled_date')->nullable();
+            $table->boolean('notified')->default(false);	
             $table->timestamps();
 
            
