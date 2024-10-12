@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
+use DB;
 class SearchController extends Controller
 {
     public function searchStatus($nid)
@@ -26,12 +27,15 @@ class SearchController extends Controller
         ->first();
         /* End For testing purposes */
 
-    
+       
+        
         if (!$user) {
             return response()->json([
                 'message' => 'Not registered',
                 'status' => 'not_registered',
             ], 404);
+        }else{
+            $schedule_data = DB::table('vaccination_schedules')->where('user_id', $user->id)->first();
         }
     
         // Check and update status if necessary
@@ -41,12 +45,13 @@ class SearchController extends Controller
             $user->update(['status' => 'Vaccinated']);
     
             // Update the cache after modifying the status
-            Cache::put("user_nid_{$nid}", $user, 60 * 60);
+            //Cache::put("user_nid_{$nid}", $user, 60 * 60);
         }
     
         return response()->json([
             'user' => $user,
             'status' => $status,
+            'scheduled_date' => $schedule_data ??  null,
         ], 200);
     }
     

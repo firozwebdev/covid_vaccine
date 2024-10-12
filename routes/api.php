@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 
-Route::get('/vaccine-centers', [App\Http\Controllers\Api\VaccineCenterController::class, 'index']);
+Route::get('/vaccine-centers', [VaccineCenterController::class, 'getVaccineCenters']);
 Route::get('/users', [VaccineCenterController::class, 'getUsers']);
 Route::post('/register', [VaccineCenterController::class, 'register']);
 Route::get('/status/{nid}', [SearchController::class, 'searchStatus']);

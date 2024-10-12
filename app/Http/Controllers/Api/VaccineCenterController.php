@@ -15,7 +15,7 @@ class VaccineCenterController extends Controller
     /**
      * Display a listing of the VaccineCenter.
      */
-    public function index()
+    public function getVaccineCenters()
     {
         $vaccineCenters = VaccineCenter::withCount('users') // Assuming there's a registrations relationship
             ->get()

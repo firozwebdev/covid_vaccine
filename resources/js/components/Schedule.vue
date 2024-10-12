@@ -108,9 +108,10 @@ export default {
         scheduled_date: scheduleDateTime
       })
       .then(response => {
+        this.closeModal(); // Close the modal
         alert('Vaccination scheduled successfully!');
         this.fetchUsers(); // Refresh the user list after scheduling
-        this.closeModal(); // Close the modal
+        
       })
       .catch(error => {
         console.error('There was an error scheduling vaccination:', error);
