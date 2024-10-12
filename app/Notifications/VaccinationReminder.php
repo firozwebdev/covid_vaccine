@@ -4,40 +4,30 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\VonageMessage;  // Use VonageMessage for SMS
 use Illuminate\Notifications\Notification;
-use Vonage\SMS\Client as NexmoClient;
 
-class VaccinationReminder extends Notification
+class VaccinationReminder extends Notification implements ShouldQueue
 {
     use Queueable;
 
     protected $user;
     protected $scheduledDate;
     protected $notificationDate;
-    protected $nexmo;
 
     public function __construct($user, $scheduledDate, $notificationDate)
     {
         $this->user = $user;
         $this->scheduledDate = $scheduledDate;
         $this->notificationDate = $notificationDate;
-        $this->nexmo = app(NexmoClient::class); // Initialize Nexmo client
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
-    public function via(object $notifiable): array
+    public function via($notifiable)
     {
-        return ['mail', 'nexmo']; // Send both email and SMS
+        return ['mail', 'vonage'];  // Use 'vonage' instead of 'nexmo'
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
-    public function toMail(object $notifiable)
+    public function toMail($notifiable)
     {
         return (new MailMessage)
             ->greeting('Hello ' . $this->user->name)
@@ -45,28 +35,18 @@ class VaccinationReminder extends Notification
             ->line('Thanks for your patience!');
     }
 
-    /**
-     * Send SMS notification via Nexmo.
-     */
-    public function toNexmo($notifiable)
+    public function toVonage($notifiable)
     {
         $message = 'Hello ' . $this->user->name . 
                    ', your vaccination is scheduled for ' . 
                    $this->scheduledDate->format('l, F j, Y \a\t g:i A') . '.';
 
-        $this->nexmo->send([
-            'to' => $this->user->mobile,  // User's mobile number
-            'from' => config('services.nexmo.sms_from'), // Sender's number
-            'text' => $message,
-        ]);
+        return (new VonageMessage)
+            ->content($message)
+            ->from(config('services.vonage.sms_from'));  // Sender's number from the configuration
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
+    public function toArray($notifiable)
     {
         return [
             'scheduled_date' => $this->scheduledDate,
