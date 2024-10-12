@@ -73,20 +73,19 @@ export default {
         this.fetchVaccineCenters();
     },
     methods: {
-        fetchVaccineCenters() {
-            axios.get('/api/vaccine-centers')
-                .then(response => {
-                    this.vaccineCenters = response.data.data.vaccineCenters;
-                })
-                .catch(error => {
-                    console.error("There was an error fetching vaccine centers:", error);
-                });
+        async fetchVaccineCenters() {
+            try {
+                const response = await axios.get('/api/vaccine-centers');
+                this.vaccineCenters = response.data.data.vaccineCenters;
+            } catch (error) {
+                console.error("There was an error fetching vaccine centers:", error);
+            }
         },
         checkCenterCapacity() {
             this.selectedCenter = this.vaccineCenters.find(center => center.id === this.form.vaccine_center_id);
             this.isCenterFull = this.selectedCenter && this.selectedCenter.current_registrations >= this.selectedCenter.daily_limit;
         },
-        registerUser() {
+        async registerUser() {
             if (this.isCenterFull) {
                 alert('Please choose another vaccine center, as the selected one is full.');
                 return;
@@ -100,30 +99,29 @@ export default {
                 return; // Stop execution if validation fails
             }
 
-            axios.post('/api/register', this.form)
-                .then(response => {
-                    this.message = response.data.message;
-                    this.status = response.data.status;
+            try {
+                const response = await axios.post('/api/register', this.form);
+                this.message = response.data.message;
+                this.status = response.data.status;
 
-                    // Set the status URL to navigate to after registration
-                    if (response.data.status === 'registered') {
-                        this.statusUrl = `/status/${this.form.nid}`; // Adjust according to your routes
-                    }
-                })
-                .catch(error => {
-                    console.error("There was an error registering:", error);
+                // Set the status URL to navigate to after registration
+                if (response.data.status === 'registered') {
+                    this.statusUrl = `/status/${this.form.nid}`; // Adjust according to your routes
+                }
+            } catch (error) {
+                console.error("There was an error registering:", error);
 
-                    // Check for validation errors from the server
-                    if (error.response && error.response.data) {
-                        if (error.response.data.nid && error.response.data.nid.length > 0) {
-                            this.errorMessage = error.response.data.nid[0]; // Display the first error message for NID
-                        } else {
-                            this.errorMessage = error.response.data.message || "An unexpected error occurred. Please try again.";
-                        }
+                // Check for validation errors from the server
+                if (error.response && error.response.data) {
+                    if (error.response.data.nid && error.response.data.nid.length > 0) {
+                        this.errorMessage = error.response.data.nid[0]; // Display the first error message for NID
                     } else {
-                        this.errorMessage = "An unexpected error occurred. Please try again."; // Fallback message
+                        this.errorMessage = error.response.data.message || "An unexpected error occurred. Please try again.";
                     }
-                });
+                } else {
+                    this.errorMessage = "An unexpected error occurred. Please try again."; // Fallback message
+                }
+            }
         },
     },
 };

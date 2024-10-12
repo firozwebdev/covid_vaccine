@@ -57,7 +57,7 @@ export default {
     },
   },
   methods: {
-    checkStatus() {
+    async checkStatus() {
       // Reset error and status before making a request
       this.errorMessage = '';
       this.status = '';
@@ -69,23 +69,22 @@ export default {
         return;
       }
 
-      // Make an API call to check the vaccination status
-      axios.get(`/api/status/${this.nid}`)
-        .then(response => {
-          this.status = response.data.status;       // Update status from API
-          this.scheduledDate = response.data.scheduled_date || ''; // Set the scheduled date if it exists
-          this.errorMessage = '';  // Clear error message
-        })
-        .catch(error => {
-          // Handle specific cases for errors
-          if (error.response && error.response.status === 404) {
-            this.status = 'Not registered'; // Set status to not registered
-            this.errorMessage = ''; // Clear any previous error message
-          } else {
-            console.error("There was an error checking the status:", error);
-            this.errorMessage = 'An unexpected error occurred. Please try again.';
-          }
-        });
+      try {
+        // Make an API call to check the vaccination status
+        const response = await axios.get(`/api/status/${this.nid}`);
+        this.status = response.data.status; // Update status from API
+        this.scheduledDate = response.data.scheduled_date || ''; // Set the scheduled date if it exists
+        this.errorMessage = ''; // Clear error message
+      } catch (error) {
+        // Handle specific cases for errors
+        if (error.response && error.response.status === 404) {
+          this.status = 'Not registered'; // Set status to not registered
+          this.errorMessage = ''; // Clear any previous error message
+        } else {
+          console.error("There was an error checking the status:", error);
+          this.errorMessage = 'An unexpected error occurred. Please try again.';
+        }
+      }
     },
     validateNID(nid) {
       return /^\d{10}$/.test(nid); // Ensure NID is exactly 10 digits
@@ -93,7 +92,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .search-container {

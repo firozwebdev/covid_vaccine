@@ -78,14 +78,13 @@ export default {
     this.fetchUsers(); // Fetch users when the component is created
   },
   methods: {
-    fetchUsers(pageUrl = '/api/users') {
-      axios.get(pageUrl)
-        .then(response => {
-          this.users = response.data.users; // Assign the fetched users and pagination info
-        })
-        .catch(error => {
-          console.error('There was an error fetching users:', error);
-        });
+    async fetchUsers(pageUrl = '/api/users') {
+      try {
+        const response = await axios.get(pageUrl);
+        this.users = response.data.users; // Assign the fetched users and pagination info
+      } catch (error) {
+        console.error('There was an error fetching users:', error);
+      }
     },
     openScheduleModal(user) {
       this.selectedUser = user; // Store the user to schedule
@@ -95,7 +94,7 @@ export default {
     closeModal() {
       this.selectedUser = null; // Close the modal
     },
-    confirmSchedule() {
+    async confirmSchedule() {
       if (!this.scheduleDate || !this.scheduleTime) {
         alert('Please select both date and time.');
         return;
@@ -103,19 +102,17 @@ export default {
 
       const scheduleDateTime = `${this.scheduleDate} ${this.scheduleTime}`;
 
-      axios.post('/api/schedule', {
-        user_id: this.selectedUser.id,  // Send user ID instead of the whole user object
-        scheduled_date: scheduleDateTime
-      })
-      .then(response => {
+      try {
+        await axios.post('/api/schedule', {
+          user_id: this.selectedUser.id,  // Send user ID instead of the whole user object
+          scheduled_date: scheduleDateTime
+        });
         this.closeModal(); // Close the modal
         alert('Vaccination scheduled successfully!');
-        this.fetchUsers(); // Refresh the user list after scheduling
-        
-      })
-      .catch(error => {
+        await this.fetchUsers(); // Refresh the user list after scheduling
+      } catch (error) {
         console.error('There was an error scheduling vaccination:', error);
-      });
+      }
     }
   }
 };

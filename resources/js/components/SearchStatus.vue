@@ -24,14 +24,13 @@ export default {
         this.fetchStatus();
     },
     methods: {
-        fetchStatus() {
-            axios.get(`/api/status/${this.nid}`)
-                .then(response => {
-                    this.status = response.data.status; // Adjust according to your API response
-                })
-                .catch(error => {
-                    console.error("There was an error fetching the status:", error);
-                });
+        async fetchStatus() {
+            try {
+                const response = await axios.get(`/api/status/${this.nid}`);
+                this.status = response.data.status; // Adjust according to your API response
+            } catch (error) {
+                console.error("There was an error fetching the status:", error);
+            }
         },
     },
 };
