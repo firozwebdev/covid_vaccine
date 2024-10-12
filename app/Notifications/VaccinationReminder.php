@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use App\Contracts\NotificationInterface;
-use Illuminate\Support\Facades\App; // Import the App facade
+use Illuminate\Support\Facades\App;
 
 class VaccinationReminder extends Notification implements ShouldQueue
 {
@@ -15,20 +15,25 @@ class VaccinationReminder extends Notification implements ShouldQueue
     protected $user;
     protected $scheduledDate;
     protected $notificationDate;
-    protected $notifications;
 
     public function __construct($user, $scheduledDate, $notificationDate)
     {
         $this->user = $user;
         $this->scheduledDate = $scheduledDate;
         $this->notificationDate = $notificationDate;
-        $this->notifications = config('notification.channels'); // Get channels from config
     }
 
     public function via($notifiable)
     {
-        // Return the configured channels
-        return $this->notifications;
+        // Retrieve and validate the configured channels
+        $notifications = config('notification.channels', []);
+        \Log::debug('Notification channels: ', $notifications); // Log the channels
+        if (empty($notifications)) {
+            // Handle the case where no notification channels are defined
+            return ['mail']; // Default to mail or handle accordingly
+        }
+
+        return $notifications;
     }
 
     public function toMail($notifiable)

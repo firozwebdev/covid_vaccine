@@ -72,10 +72,6 @@ class VaccineScheduleController extends Controller
         // Calculate the notification date (9 PM the night before the scheduled date)
         $notificationDate = Carbon::parse($scheduledDate)->subDay()->setTime(21, 0);
     
-        // Retrieve the configured notification channels from the config
-        $notifications = config('notification.channels'); // e.g., ['email', 'sms']
-    
-        // Notify the user with both scheduled and notification dates
         $user->notify(new VaccinationReminder($user, $scheduledDate, $notificationDate));
     }
     
