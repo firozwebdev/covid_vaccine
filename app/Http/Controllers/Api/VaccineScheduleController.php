@@ -72,7 +72,7 @@ class VaccineScheduleController extends Controller
         // Calculate the notification date (9 PM the night before the scheduled date)
         $notificationDate = Carbon::parse($scheduledDate)->subDay()->setTime(21, 0);
     
-        $user->notify(new VaccinationReminder($user, $scheduledDate, $notificationDate));
+        $user->notify(new EmailNotification($user, $scheduledDate, $notificationDate));
     }
     
     
