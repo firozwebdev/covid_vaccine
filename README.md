@@ -69,6 +69,13 @@ php artisan db:seed
 
 ```
 
+#### 9. Make sure you run the queue worker to process the notifications:
+
+```bash
+php artisan queue:work --daemon
+
+```
+
 #### 9. For local development:
 
 ```bash
