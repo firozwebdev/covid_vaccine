@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Register from './components/Register.vue';
 import Search from './components/Search.vue';
 import SearchStatus from './components/SearchStatus.vue';
+import Schedule from './components/Schedule.vue';
 
 
 const routes = [
@@ -18,8 +19,13 @@ const routes = [
   {
     path: '/status/:nid',
     name: 'status',
-    component: SearchStatus, // Your component for checking status
-    props: true, // This allows you to pass the route params as props
+    component: SearchStatus, 
+    props: true, 
+  },
+  {
+    path: '/schedule',
+    name: 'schedule',
+    component: Schedule,
   },
 ];
 

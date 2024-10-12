@@ -38,18 +38,20 @@ class VaccineCenterController extends Controller
     public function getUsers(Request $request)
     {
         // Define how many users to retrieve per page
-        $perPage = $request->input('per_page', 10); // Default to 10 if not specified
+        $perPage = $request->input('per_page', 20); // Default to 10 if not specified
     
         // Cache key based on pagination and selected fields to improve performance
         $cacheKey = "users_page_" . $request->input('page', 1) . "_per_" . $perPage;
     
         // Attempt to retrieve from cache
-        $users = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($perPage) {
-            // Fetch paginated users with their vaccine center details, selecting necessary fields
-            return User::with(['vaccineCenter:id,name']) // Adjust fields based on your VaccineCenter model
-                ->select('id', 'name', 'email', 'nid', 'mobile', 'vaccine_center_id', 'status', 'scheduled_date')
-                ->paginate($perPage); // Use pagination
-        });
+        // $users = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($perPage) {
+        //     // Fetch paginated users with their vaccine center details, selecting necessary fields
+        //     return User::with(['vaccineCenter:id,name']) // Adjust fields based on your VaccineCenter model
+        //         ->select('id', 'name', 'email', 'nid', 'mobile', 'vaccine_center_id', 'status', 'scheduled_date')
+        //         ->paginate($perPage); // Use pagination
+        // });
+
+        $users  = User::with(['vaccineCenter:id,name'])->select('id', 'name', 'email', 'nid', 'mobile', 'vaccine_center_id', 'status', 'scheduled_date')->orderBy('id', 'desc')->paginate($perPage);
     
         // Return as JSON response with pagination details
         return response()->json([
@@ -99,6 +101,8 @@ class VaccineCenterController extends Controller
             
         ], 201);
     }
+
+   
 
     
 }

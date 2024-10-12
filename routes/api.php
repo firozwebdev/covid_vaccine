@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\VaccineCenterController;
+use App\Http\Controllers\Api\VaccineScheduleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,3 +15,4 @@ Route::get('/vaccine-centers', [App\Http\Controllers\Api\VaccineCenterController
 Route::get('/users', [VaccineCenterController::class, 'getUsers']);
 Route::post('/register', [VaccineCenterController::class, 'register']);
 Route::get('/status/{nid}', [SearchController::class, 'searchStatus']);
+Route::post('/schedule', [VaccineScheduleController::class, 'scheduleVaccination']);
