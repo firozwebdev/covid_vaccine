@@ -6,8 +6,10 @@ use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\VaccinationSchedule;
+use App\Events\VaccinationScheduled;
 use App\Http\Controllers\Controller;
 use App\Notifications\EmailNotification;
+use App\Notifications\VonageNotification;
 use App\Notifications\VaccinationReminder;
 
 class VaccineScheduleController extends Controller
@@ -64,16 +66,21 @@ class VaccineScheduleController extends Controller
         ]);
 
         // Schedule notification for the user
-        $this->scheduleNotification($user, $user->scheduled_date);
+        // Fire the VaccinationScheduled event
+        VaccinationScheduled::dispatch($user, $date);
+
+        // Return a quick response to the user
+        return response()->json(['message' => 'Vaccination scheduled successfully!'], 200);
     }
 
-    private function scheduleNotification(User $user, $scheduledDate)
-    {
-        // Calculate the notification date (9 PM the night before the scheduled date)
-        $notificationDate = Carbon::parse($scheduledDate)->subDay()->setTime(21, 0);
+    // private function scheduleNotification(User $user, $scheduledDate)
+    // {
+    //     // Calculate the notification date (9 PM the night before the scheduled date)
+    //     $notificationDate = Carbon::parse($scheduledDate)->subDay()->setTime(21, 0);
     
-        $user->notify(new EmailNotification($user, $scheduledDate, $notificationDate));
-    }
+    //     $user->notify(new EmailNotification($user, $scheduledDate, $notificationDate));
+    //     $user->notify(new VonageNotification($user, $scheduledDate, $notificationDate));
+    // }
     
     
 
