@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\VaccinationSchedule;
 use App\Http\Controllers\Controller;
+use App\Notifications\EmailNotification;
 use App\Notifications\VaccinationReminder;
 
 class VaccineScheduleController extends Controller
@@ -68,12 +69,18 @@ class VaccineScheduleController extends Controller
 
     private function scheduleNotification(User $user, $scheduledDate)
     {
-        // Calculate the notification date (9 PM the night before the scheduled date)
         $notificationDate = Carbon::parse($scheduledDate)->subDay()->setTime(21, 0);
-
+    
+        // Create instances of notification handlers
+        $notifications = [
+            'email' => new EmailNotification(),
+            //'sms' => new SMSNotification(),
+        ];
+    
         // Notify the user with both scheduled and notification dates
-        $user->notify(new VaccinationReminder($user, $scheduledDate, $notificationDate));
+        $user->notify(new VaccinationReminder($user, $scheduledDate, $notificationDate, $notifications));
     }
+    
 
     private function getNextWeekday(Carbon $date)
     {
