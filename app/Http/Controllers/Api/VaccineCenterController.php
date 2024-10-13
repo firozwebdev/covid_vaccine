@@ -44,14 +44,16 @@ class VaccineCenterController extends Controller
         // Cache key based on pagination and selected fields to improve performance
         $cacheKey = "users_page_" . $request->input('page', 1) . "_per_" . $perPage;
     
-        // Attempt to retrieve from cache
+        // Start to retrieve from cache in Production environment
         // $users = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($perPage) {
         //     // Fetch paginated users with their vaccine center details, selecting necessary fields
         //     return User::with(['vaccineCenter:id,name']) // Adjust fields based on your VaccineCenter model
         //         ->select('id', 'name', 'email', 'nid', 'mobile', 'vaccine_center_id', 'status', 'scheduled_date')
         //         ->paginate($perPage); // Use pagination
         // });
+        // End to retrieve from cache in Production environment
 
+        // Start to retrieve from only DB in Development environment
         $users  = User::with(['vaccineCenter:id,name'])->select('id', 'name', 'email', 'nid', 'mobile', 'vaccine_center_id', 'status', 'scheduled_date')->orderBy('id', 'desc')->paginate($perPage);
     
         // Return as JSON response with pagination details

@@ -73,14 +73,6 @@ class VaccineScheduleController extends Controller
         return response()->json(['message' => 'Vaccination scheduled successfully!'], 200);
     }
 
-    // private function scheduleNotification(User $user, $scheduledDate)
-    // {
-    //     // Calculate the notification date (9 PM the night before the scheduled date)
-    //     $notificationDate = Carbon::parse($scheduledDate)->subDay()->setTime(21, 0);
-    
-    //     $user->notify(new EmailNotification($user, $scheduledDate, $notificationDate));
-    //     $user->notify(new VonageNotification($user, $scheduledDate, $notificationDate));
-    // }
     
     
 

@@ -19,7 +19,8 @@ class SendRegistrationNotification
                 'Please keep checking your email for verification and schedule time.',
             ],
         ];
-        $user->notify(new EmailNotification($user, null, null, $messages));
-        //$user->notify(new VonageNotification($user));
+        //$user->notify(new EmailNotification($user, null, null, $messages));
+        $user->notify(new VonageNotification($user, null, null, $messages));
+        
     }
 }

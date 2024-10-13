@@ -13,12 +13,14 @@ class VonageNotification extends Notification implements ShouldQueue
     protected $user;
     protected $scheduledDate;
     protected $notificationDate;
+    protected $messages;
 
-    public function __construct($user, $scheduledDate, $notificationDate)
+    public function __construct($user, $scheduledDate, $notificationDate, $messages)
     {
         $this->user = $user;
         $this->scheduledDate = $scheduledDate;
         $this->notificationDate = $notificationDate;
+        $this->messages = $messages;
     }
 
     public function via($notifiable)
@@ -28,6 +30,10 @@ class VonageNotification extends Notification implements ShouldQueue
 
     public function toVonage($notifiable)
     {
+        // For testing purpose
+        \Log::info('Simulated Vonage SMS notification for user ID: ' . $this->user->id);
+        \Log::info('Message content: Your vaccination is scheduled for ' . $this->scheduledDate . '. You will receive a reminder on ' . $this->notificationDate);
+        // End for testing purpose
         return (new VonageMessage)
             ->content('Your vaccination is scheduled for ' . $this->scheduledDate . '. You will receive a reminder on ' . $this->notificationDate);
     }
