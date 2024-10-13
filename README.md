@@ -4,7 +4,7 @@ This is a COVID Vaccine Registration System built using Laravel 11 for the backe
 ## Project Description
 
 ### User Registration: 
-Users can register themselves in order to get vaccine, as soon they register, they will be notified with email as well as sms. At the time of registration, user can give various information like name, email, nid, mobile no. etc. But here nid is unique and must be exact 10 digit. A user can only register onece with a nid. 
+Users can register themselves in order to get vaccined, as soon they register, they will be notified with email as well as sms. At the time of registration, user can give various information like name, email, nid, mobile no. etc. But here nid is unique and must be exact 10 digit. A user can only register once with a nid. 
 ### Search:  
 Users can search themeselves if they put nid to know their status (Not scheduled, Scheduled, Vaccinated etc.). If any user does not register, he/she can show herself as not registered.
 
