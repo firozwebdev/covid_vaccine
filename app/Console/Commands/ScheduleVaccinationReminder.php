@@ -35,14 +35,21 @@ class ScheduleVaccinationReminder extends Command
                         
                         // Send notification
                         // $user->notify(new EmailNotification($user, $user->scheduled_date, $notificationDate, $messages));
-                        $notification = app(NotificationInterface::class, [
+                        $email_notification = app(NotificationInterface::class, [
                             'type' => 'email',
                             'user' => $user,
                             'notificationDate' => $notificationDate,
                             'messages' => $messages,
                         ]);
+                        $sms_notification = app(NotificationInterface::class, [
+                            'type' => 'sms',
+                            'user' => $user,
+                            'notificationDate' => $notificationDate,
+                            'messages' => $messages,
+                        ]);
                         
-                        $user->notify($notification);
+                        $user->notify($email_notification);
+                        $user->notify($sms_notification);
 
                         // Log notification sending
                         \Log::info("Notification sent to user ID: {$user->id} for vaccination on {$user->scheduled_date}");

@@ -51,23 +51,28 @@ class SmsNotification extends Notification implements ShouldQueue, NotificationI
 
     protected function buildMessageText()
     {
-        // Start with the greeting
-        $messageText = $this->messages['greeting'] . "\n"; // Add the greeting with a newline
-
-        // Append each line from the 'message' array
-        foreach ($this->messages['message'] as $line) {
-            if (!empty($line)) {
-                $messageText .= $line . "\n"; // Add each line with a newline at the end
+        // Start with the greeting, make sure 'greeting' exists and is not null
+        $messageText = isset($this->messages['greeting']) ? $this->messages['greeting'] . "\n" : '';
+    
+        // Append each line from the 'message' array if it exists and is an array
+        if (isset($this->messages['message']) && is_array($this->messages['message'])) {
+            foreach ($this->messages['message'] as $line) {
+                if (!empty($line)) {
+                    $messageText .= $line . "\n"; // Add each line with a newline at the end
+                }
             }
         }
-
-        // Optionally, add any other dynamic content, like scheduled or notification dates
-        $messageText .= sprintf(
-            "Your vaccination is scheduled for %s.",
-            $this->scheduledDate->format('l, F j, Y \a\t g:i A')
-        );
-
+    
+        // Check if scheduled date is set and valid
+        if (isset($this->scheduledDate) && $this->scheduledDate instanceof \DateTime) {
+            $messageText .= sprintf(
+                "Your vaccination is scheduled for %s.",
+                $this->scheduledDate->format('l, F j, Y \a\t g:i A')
+            );
+        }
+    
         return trim($messageText); // Return the final message, trimming any excess whitespace
     }
+    
 
 }
