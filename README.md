@@ -3,13 +3,16 @@
 This is a COVID Vaccine Registration System built using Laravel 11 for the backend and Vue.js for the frontend. The system allows users to register for vaccines, check their registration status, and manage vaccination centers.
 ## Project Description
 
-### User Registration: Users can register themselves in order to get vaccine, as soon they register, they will be notified with email as well as sms. At the time of registration, user can give various information like name, email, nid, mobile no. etc. But here nid is unique and must be exact 10 digit. A user can only register onece with a nid. 
+### User Registration: 
+Users can register themselves in order to get vaccine, as soon they register, they will be notified with email as well as sms. At the time of registration, user can give various information like name, email, nid, mobile no. etc. But here nid is unique and must be exact 10 digit. A user can only register onece with a nid. 
+### Search:  
+Users can search themeselves if they put nid to know their status (Not scheduled, Scheduled, Vaccinated etc.). If any user does not register, he/she can show herself as not registered.
 
-### Users can search themeselves if they put nid to know their status (Not scheduled, Scheduled, Vaccinated etc.). If any user does not register, he/she can show herself as not registered.
+### Schedule:  
+In scheduled secition, Authority will give any user scheduled date or scheduled date will be placed as first come first serve. If any user is scheduled, he or she will be got notified with email as well as sms. Any scheduled user will be got notied at 9pm. night just before the schedule date.
 
-### In scheduled secition, Authority will give any user scheduled date or scheduled date will be placed as first come first serve. If any user is scheduled, he or she will be got notified with email as well as sms. Any scheduled user will be got notied at 9pm. night just before the schedule date. 
-
-### If the scheduled date is passed, that user's status will be vaccinated.
+### Status: 
+If the scheduled date is passed, that user's status will be vaccinated.
 
 ##Improvements:
 1. UI could be better with Vuetify or any other vueJs ui
