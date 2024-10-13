@@ -17,6 +17,8 @@ class EmailNotification extends Notification implements ShouldQueue
 
     public function __construct($user, $scheduledDate, $notificationDate, $messages)
     {
+
+        
         $this->user = $user;
         $this->scheduledDate = $scheduledDate;
         $this->notificationDate = $notificationDate;

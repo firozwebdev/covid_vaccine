@@ -2,6 +2,8 @@
 namespace App\Listeners;
 
 use App\Events\VaccinationScheduled;
+use App\Notifications\SmsNotification;
+use App\Contracts\NotificationInterface;
 use App\Notifications\EmailNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -28,6 +30,17 @@ class SendVaccinationNotification implements ShouldQueue
                 'Thanks for your Patience. Please present at your vaccination center in the scheduled time.',
             ],
         ];
-        $user->notify(new EmailNotification($user, $scheduledDate, $notificationDate, $messages));
+
+        $notification = app(NotificationInterface::class, [
+            'type' => 'email',
+            'user' => $user,
+            'scheduledDate' => $scheduledDate,
+            'notificationDate' => $notificationDate,
+            'messages' => $messages,
+        ]);
+        
+        $user->notify($notification);
+        //$user->notify(new EmailNotification($user, $scheduledDate, $notificationDate, $messages));
+        //$user->notify(new SmsNotification($user, $scheduledDate, $notificationDate, $messages));
     }
 }

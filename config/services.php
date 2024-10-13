@@ -35,10 +35,10 @@ return [
         ],
     ],
 
-    'vonage' => [
-        'key' => env('VONAGE_KEY'),
-        'secret' => env('VONAGE_SECRET'),
-        'sms_from' => env('VONAGE_FROM'),
+    'infobip' => [
+        'key' => env('INFOBIP_KEY'),
+        'base_url' => env('INFOBIP_BASE_URL'),
+        'sms_from' => env('INFOBIP_FROM'),
     ],
 
 

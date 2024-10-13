@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 
+use App\Notifications\SmsNotification;
 use Illuminate\Support\ServiceProvider;
 use App\Contracts\NotificationInterface;
 use App\Notifications\EmailNotification;
@@ -15,11 +16,15 @@ class NotificationServiceProvider extends ServiceProvider
         // Bind notification classes to their interface
         $this->app->bind(NotificationInterface::class, function ($app, $params) {
             // Expecting 'type' and any additional required parameters
+            $user = $params['user'] ?? null;
+            $scheduledDate = $params['scheduledDate'] ?? null;
+            $notificationDate = $params['notificationDate'] ?? null;
+            $messages = $params['messages'] ?? null;
             switch ($params['type']) {
                 case 'email':
-                    return new EmailNotification($params['user'], $params['scheduledDate'] = null, $params['notificationDate']= null, $params['messages'] = []);
+                    return new EmailNotification($user, $scheduledDate, $notificationDate, $messages);
                 case 'sms':
-                    return new VonageNotification($params['user'], $params['scheduledDate'] = null, $params['notificationDate'] = null, $params['messages']= []);
+                    //return new SmsNotification($user, $scheduledDate, $notificationDate, $messages);
                 default:
                     throw new \InvalidArgumentException("Unsupported notification type: {$params['type']}");
             }

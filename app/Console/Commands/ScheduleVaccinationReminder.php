@@ -5,6 +5,7 @@ use Log;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Console\Command;
+use App\Contracts\NotificationInterface;
 use App\Notifications\EmailNotification;
 
 class ScheduleVaccinationReminder extends Command
@@ -33,7 +34,15 @@ class ScheduleVaccinationReminder extends Command
                         ];
                         
                         // Send notification
-                        $user->notify(new EmailNotification($user, $user->scheduled_date, $notificationDate, $messages));
+                        // $user->notify(new EmailNotification($user, $user->scheduled_date, $notificationDate, $messages));
+                        $notification = app(NotificationInterface::class, [
+                            'type' => 'email',
+                            'user' => $user,
+                            'notificationDate' => $notificationDate,
+                            'messages' => $messages,
+                        ]);
+                        
+                        $user->notify($notification);
 
                         // Log notification sending
                         \Log::info("Notification sent to user ID: {$user->id} for vaccination on {$user->scheduled_date}");

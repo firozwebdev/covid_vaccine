@@ -2,8 +2,10 @@
 namespace App\Listeners;
 
 use App\Events\UserRegistered;
+use App\Notifications\SmsNotification;
+use App\Contracts\NotificationInterface;
 use App\Notifications\EmailNotification;
-use App\Notifications\VonageNotification;
+
 
 class SendRegistrationNotification
 {
@@ -20,7 +22,13 @@ class SendRegistrationNotification
             ],
         ];
         //$user->notify(new EmailNotification($user, null, null, $messages));
-        $user->notify(new VonageNotification($user, null, null, $messages));
+        //$user->notify(new SmsNotification($user, null, null, $messages));
+        $notification = app(NotificationInterface::class, [
+            'type' => 'email',
+            'messages' => $messages,
+        ]);
+        
+        $user->notify($notification);
         
     }
 }
