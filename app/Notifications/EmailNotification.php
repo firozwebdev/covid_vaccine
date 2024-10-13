@@ -2,11 +2,12 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use App\Contracts\NotificationInterface;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
-class EmailNotification extends Notification implements ShouldQueue
+class EmailNotification extends Notification implements ShouldQueue, NotificationInterface
 {
     use Queueable;
 
@@ -35,16 +36,9 @@ class EmailNotification extends Notification implements ShouldQueue
         return ['mail'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
-    // public function toMail(object $notifiable)
-    // {
-    //     return (new MailMessage)
-    //         ->greeting('Hello ' . $this->user->name)
-    //         ->line($this->messages['message']);
+    public function send($notification){}
 
-    // }
+    
     public function toMail(object $notifiable)
     {
         $mailMessage = (new MailMessage)
