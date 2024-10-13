@@ -2,9 +2,7 @@
 namespace App\Listeners;
 
 use App\Events\VaccinationScheduled;
-use App\Notifications\SmsNotification;
 use App\Contracts\NotificationInterface;
-use App\Notifications\EmailNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendVaccinationNotification implements ShouldQueue
@@ -31,15 +29,23 @@ class SendVaccinationNotification implements ShouldQueue
             ],
         ];
 
-        $notification = app(NotificationInterface::class, [
+        $email_notification = app(NotificationInterface::class, [
             'type' => 'email',
+            'user' => $user,
+            'scheduledDate' => $scheduledDate,
+            'notificationDate' => $notificationDate,
+            'messages' => $messages,
+        ]);        
+        $sms_notification = app(NotificationInterface::class, [
+            'type' => 'sms',
             'user' => $user,
             'scheduledDate' => $scheduledDate,
             'notificationDate' => $notificationDate,
             'messages' => $messages,
         ]);
         
-        $user->notify($notification);
+        $user->notify($email_notification);
+        $user->notify($sms_notification);
         //$user->notify(new EmailNotification($user, $scheduledDate, $notificationDate, $messages));
         //$user->notify(new SmsNotification($user, $scheduledDate, $notificationDate, $messages));
     }

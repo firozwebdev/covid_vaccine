@@ -3,11 +3,11 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\Http;
+use App\Contracts\NotificationInterface;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SmsNotification extends Notification implements ShouldQueue
+class SmsNotification extends Notification implements ShouldQueue, NotificationInterface
 {
     use Queueable;
 
@@ -18,12 +18,13 @@ class SmsNotification extends Notification implements ShouldQueue
 
     public function __construct($user, $scheduledDate, $notificationDate, $messages)
     {
-        \Log::info('Sending SMS notification to user ID: ' . $user->id);
         $this->user = $user;
         $this->scheduledDate = $scheduledDate;
         $this->notificationDate = $notificationDate;
         $this->messages = $messages;
     }
+
+    public function send($notification){}
 
     public function via($notifiable)
     {
@@ -32,42 +33,41 @@ class SmsNotification extends Notification implements ShouldQueue
 
     public function toSms($notifiable)
     {
-        // Prepare the message body
-        $messageBody = [
+        // Construct the message text dynamically
+        $messageText = $this->buildMessageText();
+
+        return [
             'messages' => [
                 [
                     'destinations' => [
-                        ['to' => $this->user->mobile], // Ensure you have the correct phone number field
+                        ['to' => $this->user->mobile], // Ensure the mobile field is correct
                     ],
-                    'from' => config('services.sms.sms_from'), // Use your Infobip config
-                    'text' => sprintf(
-                        "Congratulations on sending your first message.\nYour vaccination is scheduled for %s. You will receive a reminder on %s.",
-                        $this->scheduledDate->format('l, F j, Y \a\t g:i A'),
-                        $this->notificationDate->format('l, F j, Y \a\t g:i A')
-                    ),
+                    'from' => config('services.infobip.from'), // Sender ID
+                    'text' => $messageText, // Dynamic message text
                 ],
             ],
         ];
-
-        // Send the SMS request
-        return $this->sendSms($messageBody);
     }
 
-    protected function sendSms(array $messageBody)
+    protected function buildMessageText()
     {
-        // Send the SMS request to Infobip
-        $response = Http::withHeaders([
-            'Authorization' => 'App ' . config('services.sms.key'),
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-        ])->post(config('services.sms.base_url') . '/sms/2/text/advanced', $messageBody);
+        // Start with the greeting
+        $messageText = $this->messages['greeting'] . "\n"; // Add the greeting with a newline
 
-        // Log the response or handle errors as needed
-        if ($response->successful()) {
-            \Log::info('SMS sent successfully: ' . $response->body());
-        } else {
-            \Log::error('Failed to send SMS. Status: ' . $response->status() . ' Response: ' . $response->body());
+        // Append each line from the 'message' array
+        foreach ($this->messages['message'] as $line) {
+            if (!empty($line)) {
+                $messageText .= $line . "\n"; // Add each line with a newline at the end
+            }
         }
+
+        // Optionally, add any other dynamic content, like scheduled or notification dates
+        $messageText .= sprintf(
+            "Your vaccination is scheduled for %s.",
+            $this->scheduledDate->format('l, F j, Y \a\t g:i A')
+        );
+
+        return trim($messageText); // Return the final message, trimming any excess whitespace
     }
 
 }

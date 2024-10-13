@@ -23,12 +23,20 @@ class SendRegistrationNotification
         ];
         //$user->notify(new EmailNotification($user, null, null, $messages));
         //$user->notify(new SmsNotification($user, null, null, $messages));
-        $notification = app(NotificationInterface::class, [
+
+        $email_notification = app(NotificationInterface::class, [
             'type' => 'email',
             'messages' => $messages,
         ]);
         
-        $user->notify($notification);
+        $sms_notification = app(NotificationInterface::class, [
+            'type' => 'sms',
+            'user' => $user,
+            'messages' => $messages,
+        ]);
+        
+        $user->notify($email_notification);
+        $user->notify($sms_notification);
         
     }
 }

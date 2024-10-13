@@ -51,6 +51,13 @@ class User extends Authenticatable
         ];
     }
 
+    public function routeNotificationForSms($notification)
+    {
+        // Return the user's mobile number to send SMS
+        return $this->mobile;
+    }
+
+
     // Relationship with VaccineCenter
     public function vaccineCenter()
     {

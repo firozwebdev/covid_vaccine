@@ -3,11 +3,12 @@
 namespace App\Providers;
 
 
+use App\Channels\SmsChannel;
 use App\Notifications\SmsNotification;
 use Illuminate\Support\ServiceProvider;
 use App\Contracts\NotificationInterface;
 use App\Notifications\EmailNotification;
-use App\Notifications\VonageNotification;
+use Illuminate\Support\Facades\Notification;
 
 class NotificationServiceProvider extends ServiceProvider
 {
@@ -20,15 +21,22 @@ class NotificationServiceProvider extends ServiceProvider
             $scheduledDate = $params['scheduledDate'] ?? null;
             $notificationDate = $params['notificationDate'] ?? null;
             $messages = $params['messages'] ?? null;
-            
+
             switch ($params['type']) {
                 case 'email':
                     return new EmailNotification($user, $scheduledDate, $notificationDate, $messages);
                 case 'sms':
-                    //return new SmsNotification($user, $scheduledDate, $notificationDate, $messages);
+                    return new SmsNotification($user, $scheduledDate, $notificationDate, $messages);
                 default:
                     throw new \InvalidArgumentException("Unsupported notification type: {$params['type']}");
             }
+        });
+    }
+
+    public function boot()
+    {
+        Notification::extend('sms', function ($app) {
+            return new SmsChannel();
         });
     }
 }
