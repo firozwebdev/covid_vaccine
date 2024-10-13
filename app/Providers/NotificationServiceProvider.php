@@ -20,6 +20,7 @@ class NotificationServiceProvider extends ServiceProvider
             $scheduledDate = $params['scheduledDate'] ?? null;
             $notificationDate = $params['notificationDate'] ?? null;
             $messages = $params['messages'] ?? null;
+            
             switch ($params['type']) {
                 case 'email':
                     return new EmailNotification($user, $scheduledDate, $notificationDate, $messages);
