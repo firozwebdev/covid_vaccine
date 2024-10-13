@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->index('nid');
             $table->bigIncrements('id');
-            $table->foreignId('vaccine_center_id');
+            $table->foreignId('vaccine_center_id')->constrained()->onDelete('cascade');
 			$table->string('name', 100);
 			$table->string('email', 100);
 			$table->string('nid')->unique();

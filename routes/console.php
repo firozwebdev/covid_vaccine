@@ -3,7 +3,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Console\Scheduling\Schedule;
-use App\Console\Commands\ScheduleVaccinationReminder;
+
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
@@ -17,6 +17,7 @@ Artisan::command('inspire', function () {
 // Optionally, if you want to schedule the command
 //$schedule->command('schedule:vaccination-reminder')->dailyAt('21:00');
 
+app(Schedule::class)->command('give:schedule')->everySixHours();
 app(Schedule::class)->command('schedule:vaccination-reminder')->dailyAt('21:00');
 //app(Schedule::class)->command('schedule:vaccination-reminder')->everyMinute();
 // Register the command to run daily

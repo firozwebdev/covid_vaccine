@@ -19,7 +19,7 @@ class UserFactory extends Factory
 			'nid' => $nid,
 			'mobile' => $this->faker->phoneNumber(),
 			'status' => $this->faker->randomElement(["Not scheduled"]),
-			'scheduled_date' => $this->faker->date()
+			'scheduled_date' => now()->addDays($this->faker->randomElement([2, 3, 4])) // Randomly add 2, 3, or 4 days
         ];
     }
 

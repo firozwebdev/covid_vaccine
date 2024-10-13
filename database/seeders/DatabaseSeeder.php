@@ -20,6 +20,39 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         $this->call(VaccineCenterSeeder::class);
-        $this->call(UserSeeder::class);
+        //$this->call(UserSeeder::class);
+
+        User::factory()->create([
+            'name' => 'Sabuz',
+            'email' => 'smskushtia@gmail.com',
+            'nid' => '1234567890',
+            'mobile' => '01754165234',
+            'vaccine_center_id' => 1
+        
+        ]);
+        User::factory()->create([
+            'name' => 'Firoz',
+            'email' => 'everythingkst@gmail.com',
+            'nid' => '1244567890',
+            'mobile' => '01754165234',
+            'vaccine_center_id' => 1
+        
+        ]);
+        User::factory()->create([
+            'name' => 'Hasin',
+            'email' => 'everythingkst@gmail.com',
+            'nid' => '1754165234',
+            'mobile' => '1204567890',
+            'vaccine_center_id' => 1
+        
+        ]);
+        User::factory()->create([
+            'name' => 'Taher',
+            'email' => 'smskushtia@gmail.com',
+            'nid' => '1934567890',
+            'mobile' => '01754165234',
+            'vaccine_center_id' => 1
+        
+        ]);
     }
 }
