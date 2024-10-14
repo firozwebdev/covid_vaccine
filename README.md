@@ -134,3 +134,16 @@ php artisan queue:work --daemon
 npm run dev
 
 ```
+
+#### 10. Check for available schedules:
+
+```bash
+php artisan schedule:list
+
+```
+#### 10. Run available schedule :
+
+```bash
+php artisan schedule:run
+
+```
