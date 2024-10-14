@@ -15,7 +15,7 @@ In scheduled secition, Authority will give any user scheduled date or scheduled 
 If the scheduled date is passed, that user's status will be vaccinated.
 
 ### Available Commands:
-####  Schedule users as first come first server within Sunday to Thursday.
+####  Schedule users as first come first serve within Sunday to Thursday.
 ```bash
 app(Schedule::class)->command('give:schedule')->everySixHours();
 
@@ -37,7 +37,7 @@ app(Schedule::class)->command('status:update-vaccination-status')->daily()->at('
 ## Can be Improved (due to time shortness):
 ### 1. UI could be better with Vuetify or any other vueJs ui
 ### 2. Enhancements:
- 
+
 Batch Scheduling: For large user bases, consider using batch processing or queues to handle the scheduling and notifications to avoid overwhelming the system.
 
 Search Optimization: Optimize the search functionality for user registration and scheduling to improve speed, especially with large datasets.
