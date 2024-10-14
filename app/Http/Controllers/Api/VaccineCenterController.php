@@ -5,9 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\VaccineCenter;
-use App\Events\UserRegistered;
-use App\Actions\StoreUserAction;
-use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 
@@ -54,7 +51,10 @@ class VaccineCenterController extends Controller
         // End to retrieve from cache in Production environment
 
         // Start to retrieve from only DB in Development environment
-        $users  = User::with(['vaccineCenter:id,name'])->select('id', 'name', 'email', 'nid', 'mobile', 'vaccine_center_id', 'status', 'scheduled_date')->orderBy('id', 'desc')->paginate($perPage);
+        $users  = User::with(['vaccineCenter:id,name'])
+                        ->select('id', 'name', 'email', 'nid', 'mobile', 'vaccine_center_id', 'status', 'scheduled_date')
+                        ->orderBy('id', 'desc')
+                        ->paginate($perPage);
     
         // Return as JSON response with pagination details
         return response()->json([
@@ -68,38 +68,7 @@ class VaccineCenterController extends Controller
         ], 200);
     }
 
-    public function register(UserRequest $request, StoreUserAction $storeUserAction)
-    {
-        $user = User::where('nid', $request->nid)->first();
-        if ($user) {
-            return response()->json([
-                'message' => 'Registration successful! Check your status.',
-                'status' => 'already_registered',
-                'user' => $user,
-            ], 200);
-        }
     
-        $vaccineCenter = VaccineCenter::find($request->vaccine_center_id);
-        $currentRegistrations = $vaccineCenter->users()->count();
-        
-        if ($currentRegistrations >= $vaccineCenter->daily_limit) {
-            return response()->json([
-                'message' => 'Registration limit for this vaccine center has been reached. Please choose another center.',
-            ], 400);
-        }
-    
-        // Register the user
-        $user = $storeUserAction->execute($request->toDTO());
-    
-        // Dispatch the event to handle post-registration tasks
-        event(new UserRegistered($user));
-    
-        return response()->json([
-            'message' => 'Registration successful! Check your status.',
-            'status' => 'registered',
-            'user' => $user,
-        ], 201);
-    }
     
 
    

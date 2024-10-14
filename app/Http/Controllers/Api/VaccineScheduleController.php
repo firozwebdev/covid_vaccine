@@ -8,9 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\VaccinationSchedule;
 use App\Events\VaccinationScheduled;
 use App\Http\Controllers\Controller;
-use App\Notifications\EmailNotification;
-use App\Notifications\VonageNotification;
-use App\Notifications\VaccinationReminder;
+
 
 class VaccineScheduleController extends Controller
 {

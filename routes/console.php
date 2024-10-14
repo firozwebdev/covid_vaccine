@@ -22,4 +22,4 @@ app(Schedule::class)->command('schedule:vaccination-reminder')->dailyAt('21:00')
 //app(Schedule::class)->command('schedule:vaccination-reminder')->everyMinute();
 // Register the command to run daily
 app(Schedule::class)->command('status:update-vaccination-status')->daily()->at('00:00'); // Run daily at midnight
-//app(Schedule::class)->command('status:update-vaccination-status')->everyMinute(); // Run daily at midnight
+//app(Schedule::class)->command('status:update-vaccination-status')->everyMinute(); 
