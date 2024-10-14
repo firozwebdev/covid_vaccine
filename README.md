@@ -38,6 +38,8 @@ app(Schedule::class)->command('status:update-vaccination-status')->daily()->at('
 ### 1. UI could be better with Vuetify or any other vueJs ui
 ### 2. Enhancements:
 
+There are a lot of places where code should be more optimized but as time is short, I had to spare those.
+
 Batch Scheduling: For large user bases, consider using batch processing or queues to handle the scheduling and notifications to avoid overwhelming the system.
 
 Search Optimization: Optimize the search functionality for user registration and scheduling to improve speed, especially with large datasets.
