@@ -14,7 +14,14 @@ In scheduled secition, Authority will give any user scheduled date or scheduled 
 ### Status: 
 If the scheduled date is passed, that user's status will be vaccinated.
 
-##Improvements:
+### Available Commands:
+```bash
+app(Schedule::class)->command('give:schedule')->everySixHours(); - Schedule user as first come first server within Sunday to Thursday.
+
+```
+
+
+## Can be Improved (due to time shortness):
 1. UI could be better with Vuetify or any other vueJs ui
 2. In 
 ## Requirements
