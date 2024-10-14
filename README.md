@@ -15,15 +15,45 @@ In scheduled secition, Authority will give any user scheduled date or scheduled 
 If the scheduled date is passed, that user's status will be vaccinated.
 
 ### Available Commands:
+####  Schedule users as first come first server within Sunday to Thursday.
 ```bash
-app(Schedule::class)->command('give:schedule')->everySixHours(); - Schedule user as first come first server within Sunday to Thursday.
+app(Schedule::class)->command('give:schedule')->everySixHours();
+
+```
+
+####  Scheduled User's Reminder at night (9pm) just before the scheduled date.
+```bash
+app(Schedule::class)->command('schedule:vaccination-reminder')->dailyAt('21:00');
+
+```
+
+####  Every User's status will be 'Vaccinated' if the schedule date is passed
+```bash
+app(Schedule::class)->command('status:update-vaccination-status')->daily()->at('00:00');
 
 ```
 
 
 ## Can be Improved (due to time shortness):
-1. UI could be better with Vuetify or any other vueJs ui
-2. In 
+### 1. UI could be better with Vuetify or any other vueJs ui
+### 2. Enhancements:
+ 
+Batch Scheduling: For large user bases, consider using batch processing or queues to handle the scheduling and notifications to avoid overwhelming the system.
+
+Search Optimization: Optimize the search functionality for user registration and scheduling to improve speed, especially with large datasets.
+
+Real-Time Scheduling Updates: Provide real-time feedback to users regarding their scheduling status through the user interface, showing them the estimated time until they will be scheduled.
+
+Analytics Dashboard: Create a detailed admin dashboard showing real-time data about vaccination progress, center capacity, user registration stats, and daily scheduling.
+
+Role-based Access Control: Implement role-based permissions for different users, such as admins, healthcare workers, and users, with distinct features and views for each.
+
+Automated Tests: Add automated unit and integration tests for critical parts of the scheduling, notification, and user registration process.
+
+Fault Tolerance: Implement error handling mechanisms to ensure that any failure during scheduling or notifications does not crash the entire system
+
+Post-Vaccination Surveys: Allow users to submit feedback or a survey after their vaccination to monitor user experience and improve service quality.
+
 ## Requirements
 
 Before you begin, ensure you have the following installed on your machine:
